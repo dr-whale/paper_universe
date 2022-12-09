@@ -5,6 +5,7 @@ from src.yandex import ClientError
 from src.yandex import InvalidMethodError
 from src.yandex import BadConfigError
 from src.yandex import InvalidArgumentError
+from config import yandex
 
 def test_decorator(func):
     def test_wrapper():
@@ -36,21 +37,17 @@ weather_client = None
 def client_create():
     global weather_client
     if not weather_client:
-        weather_client = Client(base_url, key)
+        weather_client = Client(yandex.BASE_URL, yandex.API_KEY)
     return weather_client
 
 app = Flask(__name__)
-base_url = 'https://api.weather.yandex.ru/v2'
-data_url = '/forecast'
-params = {'lat': '59.9386', 'lon': '30.3141', 'hours': 'false', 'extra': 'false', 'limit': 1}
-key = '9da62402-b240-4ad0-9f68-7e9d8a5c4028'
 
 @app.route('/condition')
 @test_decorator
 def condition():
-    return json.jsonify(dict(status = 'ok', condition = client_create().weather_req(data_url, params)['fact']['condition']))
+    return json.jsonify(dict(status = 'ok', condition = client_create().weather_req(yandex.DATA_URL, yandex.PARAMS)['fact']['condition']))
 
 @app.route('/temperature')
 @test_decorator
 def temperature():
-    return json.jsonify(dict(status = 'ok', temperature = client_create().weather_req(data_url, params)['fact']['temp']))
+    return json.jsonify(dict(status = 'ok', temperature = client_create().weather_req(yandex.DATA_URL, yandex.PARAMS)['fact']['temp']))
