@@ -1,10 +1,5 @@
-from flask import Flask
-from flask import json
-from src.yandex import Client
-from src.yandex import ClientError
-from src.yandex import InvalidMethodError
-from src.yandex import BadConfigError
-from src.yandex import InvalidArgumentError
+from flask import Flask, json
+from src.yandex import Client, ClientError, InvalidMethodError, BadConfigError, InvalidArgumentError
 from config import yandex
 
 def test_decorator(func):
