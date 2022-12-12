@@ -21,6 +21,7 @@ class Client():
         else:
             raise InvalidMethodError('Invalid Method Error')
         response.raise_for_status()
+        print('Request to Yandex')
         return response.json()
 
     def __get_prv(self, get_address, params):

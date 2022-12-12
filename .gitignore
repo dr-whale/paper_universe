@@ -3,4 +3,4 @@
 /src/yandex/__pycache__/**
 /config/__pycache__/**
 /config/.env
-/lib/__pycache__/**
+/src/lib/__pycache__/****
