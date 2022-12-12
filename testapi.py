@@ -1,5 +1,6 @@
 from flask import Flask, json
 from src.yandex import Client, ClientError, InvalidMethodError, BadConfigError, InvalidArgumentError
+from src.lib import CacheManager
 from config import yandex
 
 def test_decorator(func):
@@ -40,9 +41,18 @@ app = Flask(__name__)
 @app.route('/condition')
 @test_decorator
 def condition():
-    return json.jsonify(dict(status = 'ok', condition = client_create().weather_req(yandex.DATA_URL, yandex.PARAMS)['fact']['condition']))
+    condition = CacheManager().get('condition')
+    if not condition:
+        condition = client_create().weather_req(yandex.DATA_URL, yandex.PARAMS)['fact']['condition']
+        CacheManager().remember('condition', condition)
+    responce = dict(status = 'ok', condition = condition)
+    return json.jsonify(responce)
 
 @app.route('/temperature')
 @test_decorator
 def temperature():
-    return json.jsonify(dict(status = 'ok', temperature = client_create().weather_req(yandex.DATA_URL, yandex.PARAMS)['fact']['temp']))
+    temperature = CacheManager().get('temperature')
+    if not temperature:
+        temperature = client_create().weather_req(yandex.DATA_URL, yandex.PARAMS)['fact']['temp']
+        CacheManager().remember('temperature', temperature)
+    return json.jsonify(dict(status = 'ok', temperature = temperature))
